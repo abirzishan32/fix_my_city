@@ -17,7 +17,15 @@ export function ThemeToggle() {
     <Button
       variant="ghost"
       size="icon"
-      aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+      // Label is theme-dependent, so it must also wait for mount to avoid a
+      // server/client hydration mismatch (server can't know the resolved theme).
+      aria-label={
+        mounted
+          ? isDark
+            ? "Switch to light mode"
+            : "Switch to dark mode"
+          : "Toggle theme"
+      }
       onClick={() => setTheme(isDark ? "light" : "dark")}
     >
       {/* Render a stable placeholder until mounted to avoid hydration mismatch */}
