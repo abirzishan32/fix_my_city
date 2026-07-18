@@ -2,6 +2,7 @@ import { Clock, MapPin } from "lucide-react";
 import { CategoryIcon } from "@/components/category-icon";
 import { SeverityBadge, StatusBadge } from "@/components/issue-badges";
 import { CATEGORY_LABELS } from "@/lib/constants";
+import { cn } from "@/lib/utils";
 import type { Issue } from "@/types";
 
 function formatDate(iso: string) {
@@ -20,9 +21,35 @@ function locationLabel(issue: Issue) {
   return "No location";
 }
 
-export function IssueCard({ issue }: { issue: Issue }) {
+export function IssueCard({
+  issue,
+  onClick,
+}: {
+  issue: Issue;
+  onClick?: () => void;
+}) {
+  const clickable = Boolean(onClick);
   return (
-    <article className="group flex flex-col overflow-hidden rounded-xl bg-card ring-1 ring-foreground/10 transition-shadow duration-200 hover:shadow-md">
+    <article
+      onClick={onClick}
+      onKeyDown={
+        clickable
+          ? (e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                onClick?.();
+              }
+            }
+          : undefined
+      }
+      role={clickable ? "button" : undefined}
+      tabIndex={clickable ? 0 : undefined}
+      className={cn(
+        "group flex flex-col overflow-hidden rounded-xl bg-card ring-1 ring-foreground/10 transition-shadow duration-200 hover:shadow-md",
+        clickable &&
+          "cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+      )}
+    >
       <div className="relative aspect-[16/10] w-full overflow-hidden bg-muted">
         {issue.imageUrl ? (
           // User-uploaded image from Supabase Storage — plain <img> avoids next/image remote config.

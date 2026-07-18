@@ -8,7 +8,7 @@ import { apiErrorMessage } from "@/lib/api";
 import { STATUSES, type Issue, type IssueStatus } from "@/types";
 import { STATUS_LABELS } from "@/lib/constants";
 import { PageHeader } from "@/components/page-header";
-import { IssueCard } from "@/components/IssueCard";
+import { IssueGrid } from "@/components/IssueGrid";
 import { EmptyState } from "@/components/empty-state";
 import { ErrorBanner } from "@/components/form-field";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -123,11 +123,7 @@ export default function MyIssuesPage() {
           ].toLowerCase()} issues.`}
         />
       ) : (
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {filtered.map((issue) => (
-            <IssueCard key={issue.id} issue={issue} />
-          ))}
-        </div>
+        <IssueGrid issues={filtered} />
       )}
     </div>
   );

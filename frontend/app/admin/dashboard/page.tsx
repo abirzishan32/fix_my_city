@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { CircleCheck, ClipboardList, Clock, Inbox } from "lucide-react";
 import { issueService } from "@/services/issueService";
 import { apiErrorMessage } from "@/lib/api";
@@ -19,7 +19,7 @@ import {
 } from "@/lib/constants";
 import { PageHeader } from "@/components/page-header";
 import { DashboardCard } from "@/components/DashboardCard";
-import { IssueCard } from "@/components/IssueCard";
+import { IssueGrid } from "@/components/IssueGrid";
 import { ChartCard } from "@/components/chart-card";
 import { CategoryBarChart } from "@/components/charts/category-bar-chart";
 import { StatusDonutChart } from "@/components/charts/status-donut-chart";
@@ -36,22 +36,22 @@ export default function AdminDashboardPage() {
   const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState<Filter>("ALL");
 
-  useEffect(() => {
-    let active = true;
-    Promise.all([issueService.statistics(), issueService.allIssues()])
-      .then(([s, i]) => {
-        if (active) {
-          setStats(s);
-          setIssues(i);
-        }
-      })
-      .catch((err) => {
-        if (active) setError(apiErrorMessage(err));
-      });
-    return () => {
-      active = false;
-    };
+  const load = useCallback(async () => {
+    try {
+      const [s, i] = await Promise.all([
+        issueService.statistics(),
+        issueService.allIssues(),
+      ]);
+      setStats(s);
+      setIssues(i);
+    } catch (err) {
+      setError(apiErrorMessage(err));
+    }
   }, []);
+
+  useEffect(() => {
+    load();
+  }, [load]);
 
   const loading = (stats === null || issues === null) && !error;
 
@@ -189,11 +189,7 @@ export default function AdminDashboardPage() {
             ].toLowerCase()} issues.`}
           />
         ) : (
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {filtered.map((issue) => (
-              <IssueCard key={issue.id} issue={issue} />
-            ))}
-          </div>
+          <IssueGrid issues={filtered} canManage onUpdated={load} />
         )}
       </section>
     </div>

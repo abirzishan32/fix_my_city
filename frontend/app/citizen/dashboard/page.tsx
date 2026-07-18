@@ -15,7 +15,7 @@ import {
 } from "@/lib/constants";
 import { PageHeader } from "@/components/page-header";
 import { DashboardCard } from "@/components/DashboardCard";
-import { IssueCard } from "@/components/IssueCard";
+import { IssueGrid } from "@/components/IssueGrid";
 import { ChartCard } from "@/components/chart-card";
 import { CategoryBarChart } from "@/components/charts/category-bar-chart";
 import { StatusDonutChart } from "@/components/charts/status-donut-chart";
@@ -165,11 +165,7 @@ export default function CitizenDashboardPage() {
             }
           />
         ) : (
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {recent.map((issue) => (
-              <IssueCard key={issue.id} issue={issue} />
-            ))}
-          </div>
+          <IssueGrid issues={recent} />
         )}
       </section>
     </div>

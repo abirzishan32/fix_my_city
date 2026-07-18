@@ -1,5 +1,5 @@
 import { api } from "@/lib/api";
-import type { CreateIssuePayload, Issue, Statistics } from "@/types";
+import type { CreateIssuePayload, Issue, IssueStatus, Statistics } from "@/types";
 
 export const issueService = {
   /** Citizen: create an issue (multipart, optional image). */
@@ -35,6 +35,14 @@ export const issueService = {
   /** Admin: aggregated statistics for the dashboard. */
   async statistics(): Promise<Statistics> {
     const { data } = await api.get<Statistics>("/admin/statistics");
+    return data;
+  },
+
+  /** Admin: move an issue to a new status. */
+  async updateStatus(id: number, status: IssueStatus): Promise<Issue> {
+    const { data } = await api.patch<Issue>(`/admin/issues/${id}/status`, {
+      status,
+    });
     return data;
   },
 };

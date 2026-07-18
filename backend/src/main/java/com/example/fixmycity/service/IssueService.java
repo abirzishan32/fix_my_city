@@ -8,6 +8,7 @@ import com.example.fixmycity.entity.Issue;
 import com.example.fixmycity.entity.IssueStatus;
 import com.example.fixmycity.entity.Severity;
 import com.example.fixmycity.entity.User;
+import com.example.fixmycity.exception.ResourceNotFoundException;
 import com.example.fixmycity.repository.IssueRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -43,6 +44,14 @@ public class IssueService {
                 .imageUrl(imageUrl)
                 .citizen(citizen)
                 .build();
+        return IssueResponse.from(issueRepository.save(issue));
+    }
+
+    @Transactional
+    public IssueResponse updateStatus(Long id, IssueStatus status) {
+        Issue issue = issueRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Issue not found with id " + id));
+        issue.setStatus(status);
         return IssueResponse.from(issueRepository.save(issue));
     }
 
