@@ -39,3 +39,4 @@ build/
 .env
 .env.local
 .env.*.local
+/backend_report.tex
