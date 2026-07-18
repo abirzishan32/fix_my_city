@@ -13,6 +13,12 @@ Here:
 EntityType = User
 IDType     = Long
 */
+
+
+// We do not need to write the SQL query or the implementation code yourself.
+// Spring reads this method name: find + By + Email and understands:
+// Find a User entity where the email column equals the given email value.
+// How Spring understands this is by parsing the method name and mapping it to the corresponding SQL query based on the entity's field names and types.
 public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByEmail(String email); // This method will allow us to find a user by their email address.
