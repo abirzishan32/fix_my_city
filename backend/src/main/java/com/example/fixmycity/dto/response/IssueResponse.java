@@ -21,6 +21,9 @@ public record IssueResponse(
         String citizenName
 ) {
 
+    // Static factory method to create an IssueResponse from an Issue entity.
+    // This method extracts the necessary fields from the Issue entity and constructs a new IssueResponse object.
+    // This approach is useful for converting between different layers of the application, such as from the entity layer to the DTO layer.
     public static IssueResponse from(Issue issue) {
         return new IssueResponse(
                 issue.getId(),
