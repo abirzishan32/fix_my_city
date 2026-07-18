@@ -68,8 +68,17 @@ public class Issue {
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "citizen_id", nullable = false)
+
+    // Many issues can be reported by one citizen (user).
+    // So we use many-to-one relationship here.
+    // The citizen field in the Issue entity represents the user who reported the issue.
+    
+    @ManyToOne(fetch = FetchType.LAZY, // LAZY fetching means that the citizen data will not be loaded from the database until it is accessed for the first time. 
+                                       // This can improve performance by avoiding unnecessary data retrieval.
+                
+                optional = false // Every issue must be associated with a citizen (user) who reported it.
+                )
+    @JoinColumn(name = "citizen_id", nullable = false) // citize_id is fk
     private User citizen;
 
     @PrePersist
