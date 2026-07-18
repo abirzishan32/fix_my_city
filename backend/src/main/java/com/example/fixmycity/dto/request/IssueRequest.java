@@ -12,6 +12,10 @@ import lombok.Setter;
  * bean (setters) rather than a record. The image file is handled separately as a
  * {@code MultipartFile} request part.
  */
+
+
+// If frontend sends JSON, record is enough.
+// If frontend sends fields+file, we need a mutable bean with setters to bind the request data to the object.
 @Getter
 @Setter
 public class IssueRequest {
